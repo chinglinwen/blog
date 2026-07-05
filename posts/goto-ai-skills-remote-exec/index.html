@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>Using goto and AI Skills to Go Deeper on Remote Problems | Chinglin</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.155.3">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="ai, ssh, goto, debugging, remote-exec">
+<meta name="description" content="I often hit problems that do not show up well from code reading alone. The service is remote, the environment is slightly different from local, and the …">
+<link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/all.css" />
+
+
+
+
+<meta property="og:url" content="https://blog.clwen.com/posts/goto-ai-skills-remote-exec/">
+  <meta property="og:site_name" content="Chinglin">
+  <meta property="og:title" content="Using goto and AI Skills to Go Deeper on Remote Problems">
+  <meta property="og:description" content="I often hit problems that do not show up well from code reading alone. The service is remote, the environment is slightly different from local, and the real clue sits behind one more command: uptime, journalctl, kubectl describe, ps, ss -lntp, df -h, or a project-specific diagnostic.
+That is where goto and AI skills fit together well.
+What goto solves source: https://github.com/chinglinwen/goto
+goto is a small Go SSH client for interactive login and batch command execution. It grew out of a practical problem: shell glue and expect are fine until they are not. Terminal resize handling, jump hosts, password reuse, and host config quickly become annoying when the workflow is repetitive.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-09T17:16:56+08:00">
+    <meta property="article:modified_time" content="2026-05-09T17:16:56+08:00">
+    <meta property="article:tag" content="Ai">
+    <meta property="article:tag" content="Ssh">
+    <meta property="article:tag" content="Goto">
+    <meta property="article:tag" content="Debugging">
+    <meta property="article:tag" content="Remote-Exec">
+      <meta property="og:see_also" content="https://blog.clwen.com/posts/lessons-learned-for-reading-k8s-source-code/">
+      <meta property="og:see_also" content="https://blog.clwen.com/posts/kubeadm-expire-change/">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Using goto and AI Skills to Go Deeper on Remote Problems">
+  <meta name="twitter:description" content="I often hit problems that do not show up well from code reading alone. The service is remote, the environment is slightly different from local, and the real clue sits behind one more command: uptime, journalctl, kubectl describe, ps, ss -lntp, df -h, or a project-specific diagnostic.
+That is where goto and AI skills fit together well.
+What goto solves source: https://github.com/chinglinwen/goto
+goto is a small Go SSH client for interactive login and batch command execution. It grew out of a practical problem: shell glue and expect are fine until they are not. Terminal resize handling, jump hosts, password reuse, and host config quickly become annoying when the workflow is repetitive.">
+
+
+  <meta itemprop="name" content="Using goto and AI Skills to Go Deeper on Remote Problems">
+  <meta itemprop="description" content="I often hit problems that do not show up well from code reading alone. The service is remote, the environment is slightly different from local, and the real clue sits behind one more command: uptime, journalctl, kubectl describe, ps, ss -lntp, df -h, or a project-specific diagnostic.
+That is where goto and AI skills fit together well.
+What goto solves source: https://github.com/chinglinwen/goto
+goto is a small Go SSH client for interactive login and batch command execution. It grew out of a practical problem: shell glue and expect are fine until they are not. Terminal resize handling, jump hosts, password reuse, and host config quickly become annoying when the workflow is repetitive.">
+  <meta itemprop="datePublished" content="2026-05-09T17:16:56+08:00">
+  <meta itemprop="dateModified" content="2026-05-09T17:16:56+08:00">
+  <meta itemprop="wordCount" content="710">
+  <meta itemprop="keywords" content="Ai,Ssh,Goto,Debugging,Remote-Exec">
+</head>
+<body><header>
+<div id="titletext">
+<h2 id="title"><a href="https://blog.clwen.com/">Chinglin</a></h2>
+</div>
+<div id="title-description">
+<p id="subtitle">Take tremendous effort to be lazy !</p>
+<div id="social">
+<nav><ul>
+<li><a href="/index.xml" rel="me" aria-label="RSS"><span title="RSS" class="icons fas fa-rss" aria-hidden="true"></span></a></li>
+<li><button id="dark-mode" aria-label="Switch Dark Mode"><span title="Switch Dark Mode" class="icons fas fa-moon" aria-hidden="true"></span></button></li>
+</ul></nav>
+</div>
+</div>
+<div id="mainmenu">
+<nav>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/posts">Posts</a></li>
+<li><a href="/about">About</a></li>
+</ul>
+</nav>
+</div>
+</header>
+
+<main>
+    <div class="post">
+	
+	<div class="author">
+	
+	</div>
+	<div class="post-header">
+	
+		<div class="meta">
+			
+			<div class="date">
+				<span class="day">09</span>
+				<span class="rest">May 2026</span>
+			</div>
+			
+		</div>
+		
+		<div class="matter">
+			<h1 class="title">Using goto and AI Skills to Go Deeper on Remote Problems</h1>
+		</div>
+	</div><div class="markdown">
+		<p>I often hit problems that do not show up well from code reading alone.
+The service is remote, the environment is slightly different from local, and the real clue sits behind one more command:
+<code>uptime</code>, <code>journalctl</code>, <code>kubectl describe</code>, <code>ps</code>, <code>ss -lntp</code>, <code>df -h</code>, or a project-specific diagnostic.</p>
+<p>That is where <code>goto</code> and AI skills fit together well.</p>
+<h2 id="what-goto-solves">What <code>goto</code> solves</h2>
+<p>source: <a href="https://github.com/chinglinwen/goto" target="_blank">https://github.com/chinglinwen/goto</a></p>
+<p><code>goto</code> is a small Go SSH client for interactive login and batch command execution.
+It grew out of a practical problem: shell glue and <code>expect</code> are fine until they are not.
+Terminal resize handling, jump hosts, password reuse, and host config quickly become annoying when the workflow is repetitive.</p>
+<p>The project keeps a few useful properties together:</p>
+<ul>
+<li>one command for interactive login and batch remote execution</li>
+<li>shared host and credential config</li>
+<li>password and key-based auth</li>
+<li>jump host support</li>
+<li>support for <code>~/.ssh/config</code></li>
+<li>batch mode that preserves remote stdout, stderr, and exit status</li>
+</ul>
+<p>That last point matters more than it looks.
+If a remote command runner rewrites output, prefixes lines, or hides the exit code, it becomes much harder to use inside automation or an agent workflow.
+<code>goto</code> keeps the batch path close to raw SSH behavior, which makes it a good foundation for deeper diagnosis.</p>
+<h2 id="why-pair-it-with-ai-skills">Why pair it with AI skills</h2>
+<p>The interesting part is not &ldquo;AI writes an SSH command&rdquo;.
+The interesting part is that a skill can encode the correct operating rules for a repo and a tool, so the agent stops improvising fragile remote-exec behavior.</p>
+<p>In <code>~/.claude/skills/goto-remote-command/SKILL.md</code>, the skill defines a concrete contract:</p>
+<ul>
+<li>use <code>goto</code> as the project-native remote command runner</li>
+<li>prefer host-first batch mode: <code>goto &lt;host&gt; &lt;cmd...&gt;</code></li>
+<li>allow stdin-fed commands when no positional command is given</li>
+<li>keep remote stdout on local stdout and remote stderr on local stderr</li>
+<li>return the remote exit status</li>
+<li>avoid mixing local narration into raw command output unless verbose mode is explicitly requested</li>
+<li>keep interactive mode and batch mode separate</li>
+</ul>
+<p>This is the part I like most about skills: they compress operational knowledge into something reusable.
+Instead of reminding an agent every time how a tool behaves, the behavior becomes part of the working contract.</p>
+<h2 id="how-this-helps-dig-problems-deeper">How this helps dig problems deeper</h2>
+<p>A lot of debugging stalls at the &ldquo;probably&rdquo; layer.
+Probably a bad deploy.
+Probably a disk issue.
+Probably a jump host problem.
+Probably a process crash loop.</p>
+<p>Remote execution lets the agent move from guesses to evidence quickly.</p>
+<p>For example, a shallow investigation might stop at:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get pods
+</span></span></code></pre></div><p>A deeper investigation can branch immediately into:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>goto app-node-1 <span style="color:#e6db74">&#39;journalctl -u api -n 200 --no-pager&#39;</span>
+</span></span><span style="display:flex;"><span>goto app-node-1 <span style="color:#e6db74">&#39;ss -lntp&#39;</span>
+</span></span><span style="display:flex;"><span>goto app-node-1 <span style="color:#e6db74">&#39;df -h&#39;</span>
+</span></span><span style="display:flex;"><span>goto app-node-1 <span style="color:#e6db74">&#39;ps aux | grep api&#39;</span>
+</span></span></code></pre></div><p>Or for application-specific checks:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>goto worker-17 <span style="color:#e6db74">&#39;curl -s localhost:8080/healthz&#39;</span>
+</span></span><span style="display:flex;"><span>goto worker-17 <span style="color:#e6db74">&#39;grep -n &#34;timeout&#34; /var/log/myservice/current&#39;</span>
+</span></span><span style="display:flex;"><span>goto worker-17 <span style="color:#e6db74">&#39;env | sort&#39;</span>
+</span></span></code></pre></div><p>The value is not just command execution.
+It is the feedback loop:</p>
+<ol>
+<li>form a hypothesis</li>
+<li>run the minimum remote command that can falsify it</li>
+<li>inspect raw output</li>
+<li>refine the next command</li>
+<li>continue until the failure boundary is clear</li>
+</ol>
+<p>If the agent already knows the <code>goto</code> contract, it can stay focused on the system problem instead of spending tokens rediscovering SSH mechanics.</p>
+<h2 id="the-skill-adds-guardrails-not-magic">The skill adds guardrails, not magic</h2>
+<p>The skill is useful because it is opinionated about the failure modes that waste time:</p>
+<ul>
+<li>check for <code>~/.ssh/goto.yaml</code> or legacy <code>~/.goterm/config.yaml</code> before trying commands</li>
+<li>prefer configured jump-host flows when the environment requires them</li>
+<li>remember that <code>-p=&lt;cred&gt;</code> resolves the password, not automatically the user</li>
+<li>keep <code>initcmds</code> out of batch mode</li>
+<li>use verbose mode only when debugging the connection path itself</li>
+</ul>
+<p>These are small details, but they are the difference between &ldquo;the remote command feature exists&rdquo; and &ldquo;the remote command workflow is dependable&rdquo;.</p>
+<h2 id="why-this-pattern-scales">Why this pattern scales</h2>
+<p>I think this is a good shape for AI-assisted ops and debugging in general:</p>
+<ul>
+<li>the project provides a native tool</li>
+<li>the skill documents the tool&rsquo;s real contract</li>
+<li>the agent uses the tool consistently</li>
+<li>raw output stays trustworthy enough for deeper reasoning</li>
+</ul>
+<p>That combination makes the agent more than a code summarizer.
+It becomes a better operator.</p>
+<p>For remote systems, that usually means better debugging, faster verification, and fewer fake conclusions drawn from incomplete local context.</p>
+<p><code>goto</code> gives the execution path.
+The skill gives the operating discipline.
+Together they make it easier to dig until the real problem shows up.</p>
+
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="tags">
+		<div class="taxosfloating_left">
+			<p>Authors</p>
+		</div>
+		<div class="termsfloating_right">
+			<p>
+			
+			
+			
+			<a href="/authors/wen/"> wen </a>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			</p>
+		</div>
+		<div class="clearit"></div>
+		
+		
+		
+		
+	
+		
+	
+	
+	
+	<div class="tags">
+		<div class="taxosfloating_left">
+			<p>Series</p>
+		</div>
+		<div class="termsfloating_right">
+			<p>
+			
+			
+			
+			<a href="/series/code/"> code </a>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			</p>
+		</div>
+		<div class="clearit"></div>
+		
+		
+		
+		
+	
+	
+	
+	<div class="tags">
+		<div class="taxosfloating_left">
+			<p>Tags</p>
+		</div>
+		<div class="termsfloating_right">
+			<p>
+			
+			
+			
+			
+			
+			
+			
+			<a href="/tags/ai/"> ai </a>
+			
+			
+			
+			
+			
+			<a href="/tags/debugging/"> debugging </a>
+			
+			
+			
+			
+			
+			<a href="/tags/goto/"> goto </a>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<a href="/tags/remote-exec/"> remote-exec </a>
+			
+			
+			
+			
+			
+			<a href="/tags/ssh/"> ssh </a>
+			
+			
+			
+			</p>
+		</div>
+		<div class="clearit"></div>
+		
+		
+		
+		
+		
+    </div>
+    
+<script src="https://giscus.app/client.js"
+        data-repo="chinglinwen/blog"
+        data-repo-id="MDEwOlJlcG9zaXRvcnkyOTYzNDg3MTA="
+        data-category="Announcements"
+        data-category-id="DIC_kwDOEansJs4CROKr"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>
+	
+    
+</div>
+
+</main><script src="/js/dark-mode.js"></script>
+
+</body>
+</html>

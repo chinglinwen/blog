@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Chinglin</title>
+		<link>https://blog.clwen.com/</link>
+		<description>Recent content on blog.clwen.com</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en-us</language>
+		<lastBuildDate>Sat, 09 May 2026 17:16:56 +0800</lastBuildDate>
+		<atom:link href="https://blog.clwen.com/index.xml" rel="self" type="application/rss+xml" />
+		<item>
+			<title>Using goto and AI Skills to Go Deeper on Remote Problems</title>
+			<link>https://blog.clwen.com/posts/goto-ai-skills-remote-exec/</link>
+			<pubDate>Sat, 09 May 2026 17:16:56 +0800</pubDate>
+			<guid>https://blog.clwen.com/posts/goto-ai-skills-remote-exec/</guid>
+			<description>
+			I often hit problems that do not show up well from code reading alone. The service is remote, the environment is slightly different from …
+			</description>
+		</item>
+		<item>
+			<title>Vscode Go debug breakpoint doesn&#39;t work</title>
+			<link>https://blog.clwen.com/posts/go/vscode-go-dlv/</link>
+			<pubDate>Tue, 02 Dec 2025 14:46:59 +0800</pubDate>
+			<guid>https://blog.clwen.com/posts/go/vscode-go-dlv/</guid>
+			<description>
+			Problem When clicking debug the test above a go test func, the breakpoint doesn’t work.
+Starting: ~/go/bin/dlv dap --check-go-version=false …
+			</description>
+		</item>
+		<item>
+			<title>Lessons Learned for Reading K8s Source Code</title>
+			<link>https://blog.clwen.com/posts/lessons-learned-for-reading-k8s-source-code/</link>
+			<pubDate>Tue, 22 Sep 2020 22:37:12 +0800</pubDate>
+			<guid>https://blog.clwen.com/posts/lessons-learned-for-reading-k8s-source-code/</guid>
+			<description>
+			Package sigs.k8s.io/controller-runtime/pkg/manager Lessons Use stop channel to stop things stop engageStopProcedure stopComplete …
+			</description>
+		</item>
+		<item>
+			<title>Change kubeadm expire date longer</title>
+			<link>https://blog.clwen.com/posts/kubeadm-expire-change/</link>
+			<pubDate>Fri, 18 Sep 2020 23:28:30 +0800</pubDate>
+			<guid>https://blog.clwen.com/posts/kubeadm-expire-change/</guid>
+			<description>
+			Introduction We use kubeadm to deploy kubernetes cluster.
+The default kubeadm cert have 10 years for CA and 1 years expire for cert. Here we …
+			</description>
+		</item>
+		<item>
+			<title>About</title>
+			<link>https://blog.clwen.com/about/</link>
+			<pubDate>Sat, 15 Feb 2020 23:30:30 +0800</pubDate>
+			<guid>https://blog.clwen.com/about/</guid>
+			<description>
+			About chinglin. Nice to meet you !
+You can send me email: w at clwen.com about anything.
+Here we will write most about my experience here.
+
+			</description>
+		</item>
+	</channel>
+</rss>
